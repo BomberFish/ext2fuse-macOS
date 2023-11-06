@@ -1,0 +1,37 @@
+-------------------------------------------------
+This file is for the users of Solaris.
+Check out README for general information.
+-------------------------------------------------
+CAUTION:
+Carefully use the mounted ext2/3 filesystem. 
+It should be safe if you just read from the mounted system, 
+but be careful if you want to write to it. 
+Since the FUSE on Solaris hasn't been completed,
+you cannot delete and editting an existing file will
+cause the bug that you have a duplicate file with the same name
+in the same directory.
+-------------------------------------------------
+How to build:
+	You should have FUSE kernel module and lib tool properly installed 
+in your system before you can build this project.
+	Check out INSTALL for details.
+
+How to mount:
+
+	ext2fuse devicename mountpoint [common fuse options]...
+
+How to umount:
+	
+	umount mountpoint
+
+
+e.g.
+As root: (Make sure you get the right hard disk device!)
+
+	bird:~# ext2fuse /dev/dsk/c0d0p4 /mnt/tmp
+
+And to unmount:
+
+	bird:~# umount /mnt/tmp
+
+

@@ -1,0 +1,74 @@
+FUSE ext2 implementation
+-------------------------------------------------
+
+This filesystem HAS BUGS! Do not put any data on it that you don't mind
+losing. All the normal rules apply; if it burns up your hard disk, then it's
+your problem.
+Having said that, there's basically no way it can mess with anything other
+than the partition you give it.
+The easiest way to turn your disk to toast is going to be by mkfs'ing the
+wrong partition/device... Beware!
+
+Discussion, help, bug reports etc at ext2fuse-user@lists.sourceforge.net
+Get the latest version from http://sourceforge.net/projects/ext2fuse
+-------------------------------------------------
+Unexpected features supported:
+	Secure deletion. Currently is a compile time option, but could
+		easily be made a run-time flag.
+
+Features currently not supported:
+	Proper sparse write implementation - atm we just write 0's to the file
+	Large file support (untested, may happen to work, unlikely)
+	Extended attributes
+	Named pipes, FIFOs and device files 
+
+If using platforms other than linux, note that some ports of FUSE are not
+feature-complete - see README_for_Solaris for Solaris support.
+
+Known bugs:
+	On fsck'ing, for some reason symlinks get marked as invalid inodes.
+		They work fine, though. Maybe because I have not implemented
+		fast symlinks...?
+		
+
+	Dir-clobbering bug: rename()ing a dir to the name of an existing empty
+		dir does complete succesfully, but seems to lead in the next
+		file that uses the deleted dir's blocks being strangely
+		corrupted :(
+
+	fsx (Apple filesystem exerciser) shows up bugs :(
+		Seems to be some probs with truncate, possibly in combo with
+		sparse writes.
+	
+Things to be aware of:
+	Permissions have undergone only really _basic_ testing, and thus
+		probably don't work properly.
+
+-------------------------------------------------
+How to use:
+
+	ext2fuse devicename mountpoint [common fuse options]...
+
+	Pass --help for a list of some of the common options.
+	Other useful ones not listed would include:
+		-d			enables debugging output from fuse
+		-o uid=N
+		-o gid=N	set the 'st_uid/st_gid' filesystem field
+
+	Fuse comes with a file describing the full set of options
+	(for debian, look at /usr/share/doc/libfuse-dev/README.gz)
+
+e.g.
+As root: (Be careful you get the right hard disk device!)
+
+	mecca:~# chown tom:tom /dev/hdb1
+	mecca:~# modprobe fuse
+
+As a user who has read+write access to the fuse file (probably /dev/fuse):
+
+	tom@mecca:~ $ mkfs.ext2 /dev/hdb1
+	tom@mecca:~ $ mkdir -p ~/mnt/tmp
+	tom@mecca:~ $ ./ext2fuse/ext2fuse /dev/hdb1 ~/mnt/tmp
+
+And to unmount:
+	tom@mecca:~ $ fusermount -u ~/mnt/tmp

@@ -1,0 +1,40 @@
+Build Dependencies
+==================
+General info
+------------
+- fuse kernel module, which is available in kernel version 2.6.11 and later, else
+  available at http://fuse.sourceforge.net/
+- fuse user-space tools, also available at http://fuse.sourceforge.net/
+
+Solaris
+-------
+- fuse kernel module and lib tool, which requires Nevada build 62 or later 
+  and Sun Studio 10 or later, available at http://opensolaris.org/os/project/fuse/
+
+Debian/Ubuntu 
+-------------
+apt-get install fuse-utils libfuse-dev
+
+(which should drag in: libfuse2)
+
+macOS
+-------------
+brew install gmake m4 autoconf automake libtool e2fsprogs
+
+Building
+========
+
+	./configure
+	make
+	make install
+
+macOS-specific build instructions
+-------------
+	CC="clang" CXX="clang++" CFLAGS="-idirafter/$(brew --prefix e2fsprogs)/include -idirafter/usr/local/include/osxfuse -mmacosx-version-min=10.4 --std=gnu89" LDFLAGS="-L$(brew --prefix e2fsprogs)/lib -mmacosx-version-min=10.3" ./configure
+	gmake -j$(gnproc --ignore=1)
+
+Version info
+============
+built and tested on Solaris Nevada build 64 and Ubuntu 7.04 on Jan 24, 2008
+built, not tested, on macOS 14.1.0 x86_64 on Nov 05, 2023
+

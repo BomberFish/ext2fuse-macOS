@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="ext2fuse" default="build" basedir=".">
+  <property name="src" location="src"/>
+  <property name="build" location="."/>
+  <property name="prefix" location="bin/"/>
+
+  <property name="configure" location="configure"/>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+  
+  <target name="configure" depends="init">
+    <exec dir="${build}" executable="${configure}">
+      <arg line="--prefix=${prefix}"/>
+    </exec>
+  </target>
+  
+  <target name="build">
+    <exec dir="${build}" executable="make">
+    </exec>
+  </target>
+
+  <target name="check">
+    <exec dir="${build}" executable="make">
+      <arg line="check"/>
+    </exec>
+  </target>
+  
+  <target name="install" depends="build">
+    <exec dir="${build}" executable="make">
+      <arg line="install"/>
+    </exec>
+  </target>
+
+  <target name="clean">
+    <exec dir="${build}" executable="make">
+      <arg line="clean"/>
+
+    </exec>
+  </target>
+  
+  <target name="distclean">
+    <exec dir="${build}" executable="make">
+      <arg line="distclean"/>
+    </exec>
+  </target>
+
+</project>
